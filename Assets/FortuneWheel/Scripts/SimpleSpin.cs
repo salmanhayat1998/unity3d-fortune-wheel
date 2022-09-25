@@ -107,6 +107,7 @@ public class SimpleSpin : MonoBehaviour
     private void calculateReward(int ind)
     {
         CurrentCoinsText.text = spinWheelItems[ind].amount.ToString();
+        TurnButton.interactable = true;
     }
   
 
@@ -139,7 +140,7 @@ public class SimpleSpin : MonoBehaviour
             _finalAngle = antiClockwise? (spinIterations * 360 + randomFinalAngle): -(spinIterations * 360 + randomFinalAngle);
             _isStarted = true;
 
-
+            TurnButton.interactable = false;
             // Decrease money for the turn
           //  CurrentCoinsAmount -= TurnCost;
 
