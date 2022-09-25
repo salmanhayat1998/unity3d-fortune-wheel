@@ -9,57 +9,53 @@ using UnityEngine.UI.Extensions;
 public class SimpleSpin : MonoBehaviour
 {
     public bool canSpin = true;
-    [Range(4,12)]
-    public int sections=4;
-    [Range(120f, 420f)]
-    public float radius=173f;
-    public int spinIterations = 5;
+    private bool _isStarted;
+    private float _finalAngle;
+    public bool rotateItems = true;
+    public bool antiClockwise;
     public Button TurnButton;
     public GameObject Circle; 			// Rotatable Object with rewards
     public GameObject slicePrefab;
     public Text CurrentCoinsText; 		// Pop-up text with wasted or rewarded coins amount
     public RadialLayout radialLayout;
-    public bool rotateItems = true;
-    public List<int> sectors = new List<int>();
-    public List<item> spinWheelItems = new List<item>();
-
-
-    private bool _isStarted;
-    //private float[] _sectorsAngles;
-    private float _finalAngle;
+    [Range(120f, 420f)]
+    public float radius=173f;
+    [Range(3,8)]
+    public int spinIterations = 5;
+    [Range(4, 12)]
+    public int sections = 4;
+    public item[] spinWheelItems;
     [SerializeField]private float _startAngle = 0;
+    private List<int> sectors = new List<int>();
     private float _currentLerpRotationTime;
-
+    float temp;
+    float anglediff;
     private void Start()
     {
         createWheel();
     }
-    float temp;
+  
     private void createWheel()
     {
         radialLayout.fDistance = radius;
-        float angle = radialLayout.MaxAngle / sections;
+        anglediff = radialLayout.MaxAngle / sections;
      //   temp -= angle;
         for (int i = 0; i < sections; i++)
         {
            var _item = Instantiate(slicePrefab,radialLayout.transform);
             _item.GetComponent<spinItem>().itemname.text = spinWheelItems[i].label;
             _item.GetComponent<spinItem>().icon.sprite = spinWheelItems[i].icon;
-            temp += angle;
+            temp += anglediff;
             sectors.Add((int)temp);
             if (rotateItems)
             {   
-                _item.transform.rotation = Quaternion.Euler(0, 0, angle*i);
+                _item.transform.rotation = Quaternion.Euler(0, 0, anglediff * i);
             }
         }
     }
     private void OnValidate()
     {
-        
-        //Debug.LogError("changed");
-        //item[] arr = new item[sections];
-        //spinWheelItems.Clear();
-        //spinWheelItems.AddRange(arr);
+        Array.Resize(ref spinWheelItems, sections);
     }
     void Update()
     {
@@ -69,18 +65,6 @@ public class SimpleSpin : MonoBehaviour
             TurnWheel();
         }
 
-        // Make turn button non interactable if user has not enough money for the turn
-        //if (_isStarted || CurrentCoinsAmount < TurnCost)
-        //{
-        //    TurnButton.interactable = false;
-        //    TurnButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
-        //}
-        //else
-        //{
-        //    TurnButton.interactable = true;
-        //    TurnButton.GetComponent<Image>().color = new Color(255, 255, 255, 1);
-        //}
-
         if (!_isStarted)
             return;
 
@@ -88,16 +72,18 @@ public class SimpleSpin : MonoBehaviour
 
         // increment timer once per frame
         _currentLerpRotationTime += Time.deltaTime;
+
+        // on stop wheel //
         if (_currentLerpRotationTime > maxLerpRotationTime || Circle.transform.eulerAngles.z == _finalAngle)
         {
           
             _currentLerpRotationTime = maxLerpRotationTime;
             _isStarted = false;
             _startAngle = _finalAngle % 360;
-
+          //  _startAngle -= anglediff;
             for (int i = 0; i < sectors.Count; i++)
             {
-                if (Mathf.Abs(_startAngle)== sectors[i])
+                if (((int)Mathf.Abs(_startAngle-anglediff))== sectors[i])
                 {
                     calculateReward(i);
                     break;
@@ -120,63 +106,9 @@ public class SimpleSpin : MonoBehaviour
     }
     private void calculateReward(int ind)
     {
-        Debug.LogError("Reward "+spinWheelItems[ind].amount);
+        CurrentCoinsText.text = spinWheelItems[ind].amount.ToString();
     }
-    private void GiveAwardByAngle()
-    {
-        // Here you can set up rewards for every sector of wheel
-        switch ((int)_startAngle)
-        {
-            case 0:
-                RewardCoins(1000);
-                break;
-            case -330:
-                RewardCoins(200);
-                break;
-            case -300:
-                RewardCoins(100);
-                break;
-            case -270:
-                RewardCoins(500);
-                break;
-            case -240:
-                RewardCoins(300);
-                break;
-            case -210:
-                RewardCoins(100);
-                break;
-            case -180:
-                RewardCoins(900);
-                break;
-            case -150:
-                RewardCoins(200);
-                break;
-            case -120:
-                RewardCoins(100);
-                break;
-            case -90:
-                RewardCoins(700);
-                break;
-            case -60:
-                RewardCoins(300);
-                break;
-            case -30:
-                RewardCoins(100);
-                break;
-            default:
-                RewardCoins(300);
-                break;
-        }
-    }
-    private void RewardCoins(int awardCoins)
-    {
-        CurrentCoinsText.text = awardCoins.ToString();
-        //   CoinsDeltaText.text = "+" + awardCoins;
-        //   CoinsDeltaText.gameObject.SetActive (true);
-        // StartCoroutine(UpdateCoinsAmount());
-    }
-
-
+  
 
     private IEnumerator UpdateCoinsAmount()
     {
@@ -201,14 +133,10 @@ public class SimpleSpin : MonoBehaviour
         {
             _currentLerpRotationTime = 0f;
 
-            // Fill the necessary angles (for example if you want to have 12 sectors you need to fill the angles with 30 degrees step)
-           // _sectorsAngles = new float[] { 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360 };
-
-          //  float randomFinalAngle = _sectorsAngles[UnityEngine.Random.Range(0, _sectorsAngles.Length)];
             float randomFinalAngle = sectors[UnityEngine.Random.Range(0, sectors.Count)];
 
             // Here we set up how many circles our wheel should rotate before stop
-            _finalAngle = -(spinIterations * 360 + randomFinalAngle);
+            _finalAngle = antiClockwise? (spinIterations * 360 + randomFinalAngle): -(spinIterations * 360 + randomFinalAngle);
             _isStarted = true;
 
 
@@ -220,7 +148,7 @@ public class SimpleSpin : MonoBehaviour
             //  CoinsDeltaText.gameObject.SetActive (true);
 
             // Animate coins
-            StartCoroutine(UpdateCoinsAmount());
+          //  StartCoroutine(UpdateCoinsAmount());
         }
     }
 }

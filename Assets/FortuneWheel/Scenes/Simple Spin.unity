@@ -1502,17 +1502,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canSpin: 1
-  sections: 6
-  radius: 284
-  spinIterations: 5
+  rotateItems: 1
+  antiClockwise: 0
   TurnButton: {fileID: 1964689067}
   Circle: {fileID: 1037878517}
   slicePrefab: {fileID: 4827453956081514872, guid: bca1ae5dc52b0f2459b1b034859cac12,
     type: 3}
   CurrentCoinsText: {fileID: 634102937}
   radialLayout: {fileID: 198368292}
-  rotateItems: 1
-  sectors: 
+  radius: 284
+  spinIterations: 5
+  sections: 6
   spinWheelItems:
   - label: 
     icon: {fileID: 0}
@@ -2836,17 +2836,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canSpin: 1
-  sections: 4
-  radius: 284
-  spinIterations: 5
+  rotateItems: 1
+  antiClockwise: 0
   TurnButton: {fileID: 1964689067}
   Circle: {fileID: 1686743646}
   slicePrefab: {fileID: 4827453956081514872, guid: bca1ae5dc52b0f2459b1b034859cac12,
     type: 3}
   CurrentCoinsText: {fileID: 634102937}
   radialLayout: {fileID: 198368292}
-  rotateItems: 1
-  sectors: 
+  radius: 284
+  spinIterations: 5
+  sections: 4
   spinWheelItems:
   - label: 100
     icon: {fileID: 21300000, guid: ed6d08988b823a84ebfae3321040993e, type: 3}
