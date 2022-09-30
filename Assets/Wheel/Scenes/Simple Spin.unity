@@ -949,7 +949,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: a1ff8a1bb62838a40a2c3c999088d03c, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -978,7 +978,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canSpin: 1
-  rotateItems: 1
   antiClockwise: 0
   TurnButton: {fileID: 1964689067}
   Circle: {fileID: 1686743646}

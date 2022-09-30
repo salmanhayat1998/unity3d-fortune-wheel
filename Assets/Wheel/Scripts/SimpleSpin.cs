@@ -11,7 +11,7 @@ public class SimpleSpin : MonoBehaviour
     public bool canSpin = true;
     private bool _isStarted;
     private float _finalAngle;
-    public bool rotateItems = true;
+   // public bool rotateItems = true;
     public bool antiClockwise;
     public Button TurnButton;
     public GameObject Circle; 			// Rotatable Object with rewards
@@ -47,7 +47,7 @@ public class SimpleSpin : MonoBehaviour
             _item.GetComponent<spinItem>().icon.sprite = spinWheelItems[i].icon;
             temp += anglediff;
             sectors.Add((int)temp);
-            if (rotateItems)
+         //   if (rotateItems)
             {   
                 _item.transform.rotation = Quaternion.Euler(0, 0, anglediff * i);
             }
